@@ -1,0 +1,134 @@
+import { FileText, Sparkles } from 'lucide-react';
+import React, { useState } from 'react';
+import axios from 'axios';
+import { useAuth } from '@clerk/clerk-react';
+import toast from 'react-hot-toast';
+import Markdown from 'react-markdown';
+
+
+axios.defaults.baseURL= import.meta.env.VITE_BASE_URL;
+
+const ReviewResume = () => {
+
+    const [input, setInput] = useState('')
+    const [loading, setLoading] = useState(false)
+    const [content, setContent] = useState('')
+    const {getToken} = useAuth()
+            
+                const onSubmitHandler = async (e) =>{
+                    e.preventDefault();
+                    try {
+                        setLoading(true)
+                        const formData = new FormData()
+                        formData.append('resume', input)
+                        const {data} = await axios.post('/api/ai/resume-review', formData,
+                        {headers:{Authorization:`Bearer ${await getToken()}`}})
+                        if (data.success) {
+                            setContent(data.content)
+                        }else{
+                            toast.error(data.message)
+                        }
+                    } catch (error) {
+                        toast.error(error.message)
+                    }
+                    setLoading(false)
+                }
+
+
+
+  return (
+    <div className='h-full overflow-y-scroll p-6 flex items-start flex-wrap gap-4 text-slate-700'>
+      
+    <form onSubmit={onSubmitHandler} className='w-full max-w-lg p-4 bg-white rounded-lg border border-gray-200'>
+
+        <div className='flex items-center gap-3'>
+            <Sparkles className='w-6 text-[#00DA83]'/>
+            <h1 className='text-xl font-semibold'>Resume Review</h1>
+        </div>
+
+        <p className='mt-6 text-sm font-medium'>Upload Resume</p>
+
+        <input 
+            type="file" 
+            accept='application/pdf'
+            onChange={(e) => setInput(e.target.files[0])}
+            className='w-full p-2 px-3 mt-2 outline-none text-sm rounded-md border border-gray-300 text-gray-600 ' 
+            required
+        />
+
+
+        <p className='text-xs text-gray-500 font-light mt-1'>Supports PDF Resume only</p>
+
+      
+        <button  className='w-full flex justify-center items-center gap-2 bg-gradient-to-r from-[#00DA83] to-[#009BB3] hover:from-[#00C576] hover:to-[#008A9F] text-white px-4 py-2
+        mt-6 text-sm rounded-lg cursor-pointer transition-all duration-300 hover:shadow-lg active:scale-[0.98]'>
+            {loading ? (
+               <span className='w-4 h-4 my-1 rounded-full border-2 border-t-transparent animate-spin'></span>
+            ) : (
+                <FileText className='w-4 h-4'/>
+            )}
+            Review Resume
+        </button>
+
+
+    </form>
+
+
+    <div className='w-full max-w-lg p-4 bg-white rounded-lg flex flex-col
+      border border-gray-200 min-h-96 max-h-[600px] '>
+        <div className='flex items-center gap-3'>
+            <FileText className='w-5 h-5 text-[#00DA83]'/>
+            <h1 className='text-xl font-semibold'>Analysis Result</h1>
+        </div>
+        {
+            !content ? (
+                <div className='flex-1 flex justify-center items-center'>
+                 <div className='text-sm flex flex-col items-center gap-5 text-gray-400'>
+                  <FileText className='w-9 h-9 '/>
+                  <p>Upload a resume and click "Review Resume" to get started</p>
+                 </div>
+                </div>
+            ) : (
+                <div className='mt-3 flex-1 overflow-y-auto max-h-96 '>
+                    <div className='markdown-content prose prose-sm max-w-none
+                    prose-headings:text-gray-800 prose-headings:font-semibold
+                    prose-h1:text-xl prose-h1:mb-4 prose-h1:mt-0
+                    prose-h2:text-lg prose-h2:mb-3 prose-h2:mt-6
+                    prose-h3:text-base prose-h3:mb-2 prose-h3:mt-4
+                    prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-4
+                    prose-strong:text-gray-800 prose-strong:font-semibold
+                    prose-em:text-gray-600 prose-em:italic
+                    prose-ul:my-4 prose-ul:pl-8 prose-ul:space-y-2
+                    prose-ol:my-4 prose-ol:pl-8 prose-ol:space-y-2
+                    prose-li:mb-2 prose-li:text-gray-700 prose-li:leading-relaxed
+                    prose-li:marker:text-green-500 prose-li:marker:font-bold
+                    prose-blockquote:border-l-4 prose-blockquote:border-green-200 
+                    prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-gray-600
+                    prose-code:bg-gray-100 prose-code:px-1 prose-code:py-0.5 prose-code:rounded
+                    prose-a:text-green-600 prose-a:underline hover:prose-a:text-green-800
+                    [&_ul>li]:relative [&_ul>li]:pl-2
+                    [&_ul>li::marker]:content-["●"] [&_ul>li::marker]:text-green-500 [&_ul>li::marker]:text-lg
+                    [&_ol>li]:relative [&_ol>li]:pl-2
+                    [&_ol>li::marker]:text-green-600 [&_ol>li::marker]:font-semibold [&_ol>li::marker]:text-sm
+                    [&_ul_ul>li::marker]:content-["◦"] [&_ul_ul>li::marker]:text-gray-400
+                    [&_ul_ul_ul>li::marker]:content-["▪"] [&_ul_ul_ul>li::marker]:text-gray-500'>
+                        <Markdown>
+                            {content}
+                        </Markdown>
+                    </div>
+                </div>
+            )
+        }
+        
+        
+
+    </div>
+
+
+
+
+    </div>
+  )
+}
+
+export default ReviewResume
