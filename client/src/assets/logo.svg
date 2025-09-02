@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="168" height="43" viewBox="0 0 800 300" role="img" aria-label="AISpark logo">
+  <defs>
+    <!-- Light blue gradient for the circle -->
+    <linearGradient id="bgGrad" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#7ED3F7"/>
+      <stop offset="100%" stop-color="#C9F0FF"/>
+    </linearGradient>
+    <!-- Drop highlight -->
+    <radialGradient id="shine" cx="35%" cy="30%" r="65%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.65"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Common stroke style -->
+    <style>
+      .stroke { stroke: #0F0F10; stroke-width: 14; stroke-linejoin: round; stroke-linecap: round; }
+      .text { font-family: 'Inter', 'Poppins', 'Segoe UI', Arial, sans-serif; font-weight: 800; fill: #111111; }
+    </style>
+  </defs>
+
+  <!-- Group for the circular emblem (left) -->
+  <g transform="translate(30,30)">
+    <!-- Outer circle with black stroke -->
+    <circle cx="120" cy="120" r="110" fill="url(#bgGrad)" class="stroke"/>
+    <!-- Subtle inner shine -->
+    <ellipse cx="120" cy="110" rx="85" ry="65" fill="url(#shine)"/>
+    <!-- Lightning bolt -->
+    <path d="
+      M145 55
+      L118 110
+      L152 110
+      L106 185
+      L128 125
+      L98 125
+      Z" fill="#FFD84D" class="stroke"/>
+  </g>
+
+  <!-- Text on the right -->
+  <text class="text" x="300" y="178" font-size="96" letter-spacing="1">
+    <tspan>AISpark</tspan>
+  </text>
+</svg>
