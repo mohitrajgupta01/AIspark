@@ -35,4 +35,4 @@ AI-powered content creation platform built with React, Node.js, and multiple AI 
 
 - GitHub: [@mohitrajgupta01](https://github.com/mohitrajgupta01)
 
-**Made with ❤️ and AI** ✨
+
